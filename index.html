@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FC26 Random Team</title>
+    <title>FC26 Saitama Open</title>
 
     <!-- PWA -->
     <meta name="theme-color" content="#0b0f16">
@@ -93,7 +93,7 @@
 
         .card.sp {
             animation: pulse .6s infinite alternate;
-            filter: blur(.5px)
+            filter: blur(.35px)
         }
 
         @keyframes pulse {
@@ -164,23 +164,23 @@
 
         .list {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             gap: 8px
         }
 
         .it {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             background: #141c2f;
-            border-radius: 8px;
-            padding: 6px;
+            border-radius: 10px;
+            padding: 8px;
             font-size: 12px
         }
 
         .it img {
-            width: 28px;
-            height: 28px;
+            width: 30px;
+            height: 30px;
             object-fit: contain
         }
 
@@ -204,8 +204,8 @@
 </head>
 
 <body>
-    <h1>🎮 FC26 – Random Team Picker</h1>
-    <div class="sub">PWA • 2 người • Không trùng đội • Cài lên iPhone qua Safari</div>
+    <h1>🎮 FC26 – Saitama Open</h1>
+    <div class="sub">Random Picker</div>
 
     <div class="app">
         <div class="grid">
@@ -243,81 +243,182 @@
     <div class="toast" id="toast"></div>
 
     <script>
+        /**
+         * ✅ LOCAL LOGOS (PNG 512x512)
+         * Đặt file trong /logos/ theo đúng tên dưới.
+         */
         const TEAMS = [
-            { id: 1, name: "Real Madrid", i: "RM", u: "https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg" },
-            { id: 2, name: "FC Barcelona", i: "BAR", u: "https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona_%28crest%29.svg" },
-            { id: 3, name: "Paris Saint-Germain", i: "PSG", u: "https://upload.wikimedia.org/wikipedia/en/a/a7/Paris_Saint-Germain_F.C..svg" },
-            { id: 4, name: "Liverpool", i: "LIV", u: "https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg" },
-            { id: 5, name: "Manchester City", i: "MCI", u: "https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg" },
-            { id: 6, name: "Arsenal", i: "ARS", u: "https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg" },
-            { id: 7, name: "Bayern Munich", i: "BAY", u: "https://upload.wikimedia.org/wikipedia/commons/1/1f/FC_Bayern_M%C3%BCnchen_logo_%282017%29.svg" },
-            { id: 8, name: "Atlético Madrid", i: "ATM", u: "https://upload.wikimedia.org/wikipedia/en/f/f4/Atletico_Madrid_2017_logo.svg" },
-            { id: 9, name: "Newcastle United", i: "NEW", u: "https://upload.wikimedia.org/wikipedia/en/5/56/Newcastle_United_Logo.svg" },
-            { id: 10, name: "Napoli", i: "NAP", u: "https://upload.wikimedia.org/wikipedia/commons/2/2d/SSC_Napoli.svg" },
-            { id: 11, name: "Tottenham Hotspur", i: "TOT", u: "https://upload.wikimedia.org/wikipedia/en/b/b4/Tottenham_Hotspur.svg" },
-            { id: 12, name: "Chelsea", i: "CHE", u: "https://upload.wikimedia.org/wikipedia/en/c/cc/Chelsea_FC.svg" },
-            { id: 13, name: "Manchester United", i: "MUN", u: "https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg" },
-            { id: 14, name: "Bayer Leverkusen", i: "B04", u: "https://upload.wikimedia.org/wikipedia/en/5/59/Bayer_04_Leverkusen_logo.svg" },
-            { id: 15, name: "Spain", i: "ESP", u: "https://upload.wikimedia.org/wikipedia/en/9/9a/Spain_national_football_team_crest.svg" },
-            { id: 16, name: "France", i: "FRA", u: "https://upload.wikimedia.org/wikipedia/en/c/c3/France_national_football_team_seal.svg" },
-            { id: 17, name: "Argentina", i: "ARG", u: "https://upload.wikimedia.org/wikipedia/en/c/c1/Argentina_national_football_team_logo.svg" },
-            { id: 18, name: "England", i: "ENG", u: "https://upload.wikimedia.org/wikipedia/en/b/be/England_national_football_team_crest.svg" },
-            { id: 19, name: "Portugal", i: "POR", u: "https://upload.wikimedia.org/wikipedia/en/5/5f/Portugal_national_football_team_crest.svg" },
-            { id: 20, name: "Germany", i: "GER", u: "https://upload.wikimedia.org/wikipedia/en/e/e3/Germany_national_football_team_logo.svg" }
+            { id: 1, name: "Real Madrid", i: "RM", u: "logos/real-madrid.png" },
+            { id: 2, name: "FC Barcelona", i: "BAR", u: "logos/barcelona.png" },
+            { id: 3, name: "Paris Saint-Germain", i: "PSG", u: "logos/psg.png" },
+            { id: 4, name: "Liverpool", i: "LIV", u: "logos/liverpool.png" },
+            { id: 5, name: "Manchester City", i: "MCI", u: "logos/man-city.png" },
+            { id: 6, name: "Arsenal", i: "ARS", u: "logos/arsenal.png" },
+            { id: 7, name: "Bayern Munich", i: "BAY", u: "logos/bayern.png" },
+            { id: 8, name: "Atlético Madrid", i: "ATM", u: "logos/atletico.png" },
+            { id: 9, name: "Newcastle United", i: "NEW", u: "logos/newcastle.png" },
+            { id: 10, name: "Napoli", i: "NAP", u: "logos/napoli.png" },
+            { id: 11, name: "Tottenham Hotspur", i: "TOT", u: "logos/tottenham.png" },
+            { id: 12, name: "Chelsea", i: "CHE", u: "logos/chelsea.png" },
+            { id: 13, name: "Manchester United", i: "MUN", u: "logos/man-united.png" },
+            { id: 14, name: "Bayer Leverkusen", i: "B04", u: "logos/leverkusen.png" },
+            { id: 15, name: "Spain", i: "ESP", u: "logos/spain.png" },
+            { id: 16, name: "France", i: "FRA", u: "logos/france.png" },
+            { id: 17, name: "Argentina", i: "ARG", u: "logos/argentina.png" },
+            { id: 18, name: "England", i: "ENG", u: "logos/england.png" },
+            { id: 19, name: "Portugal", i: "POR", u: "logos/portugal.png" },
+            { id: 20, name: "Germany", i: "GER", u: "logos/germany.png" },
+            { id: 21, name: "Inter", i: "INT", u: "logos/inter.png" }
         ];
 
-        let pool = [], picked = [null, null], spin = [null, null];
+        // Tick sound (local)
+        const tickSound = new Audio("sounds/tick.mp3");
+        tickSound.volume = 0.7;
+        tickSound.preload = "auto";
+
+        let pool = [];
+        let picked = [null, null];
+        let isSpinning = [false, false];
 
         const $ = id => document.getElementById(id);
-        const toast = m => { const t = $("toast"); t.textContent = m; t.classList.add("show"); setTimeout(() => t.classList.remove("show"), 1500); };
-        const fallback = (img, txt) => img.src = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' rx='60' fill='%232a3248'/><text x='50%' y='55%' text-anchor='middle' fill='white' font-size='36' font-family='Arial' font-weight='700'>${txt}</text></svg>`;
+
+        function toast(msg) {
+            const t = $("toast");
+            t.textContent = msg;
+            t.classList.add("show");
+            setTimeout(() => t.classList.remove("show"), 1500);
+        }
+
+        function fallback(img, txt) {
+            img.src = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' rx='60' fill='%232a3248'/><text x='50%' y='55%' text-anchor='middle' fill='white' font-size='36' font-family='Arial' font-weight='700'>${txt}</text></svg>`;
+        }
 
         function setCard(p, t) {
             const img = $("l" + p);
             img.src = t.u;
             img.loading = "lazy";
-            img.referrerPolicy = "no-referrer";
-            img.crossOrigin = "anonymous";
+            img.decoding = "async";
             img.onerror = () => fallback(img, t.i);
             $("n" + p).textContent = t.name;
         }
+
         function drawList() {
             $("list").innerHTML = "";
             pool.forEach(t => {
-                const d = document.createElement("div"); d.className = "it";
+                const d = document.createElement("div");
+                d.className = "it";
                 const i = document.createElement("img");
-                i.src = t.u; i.loading = "lazy"; i.referrerPolicy = "no-referrer"; i.crossOrigin = "anonymous";
+                i.src = t.u;
+                i.loading = "lazy";
+                i.decoding = "async";
                 i.onerror = () => fallback(i, t.i);
                 d.append(i, document.createTextNode(t.name));
                 $("list").appendChild(d);
             });
         }
-        function rand() { return pool[(Math.random() * pool.length) | 0]; }
 
-        function spinStart(p) {
-            if (p === 1 && !picked[0]) return toast("Quay Người chơi 1 trước");
-            $("r" + p).classList.add("sp");
-            $("s" + p).textContent = "Đang quay...";
-            spin[p] = setInterval(() => setCard(p, rand()), 80);
-            setTimeout(() => spinStop(p), 3000);
+        function rand() {
+            return pool[(Math.random() * pool.length) | 0];
         }
-        function spinStop(p) {
-            clearInterval(spin[p]);
-            const t = rand();
-            picked[p] = t;
-            pool = pool.filter(x => x.id !== t.id);
-            setCard(p, t);
-            $("s" + p).textContent = "Kết quả:";
-            $("r" + p).classList.remove("sp");
+
+        function playTick() {
+            try {
+                tickSound.currentTime = 0;
+                tickSound.play();
+            } catch (e) { }
+        }
+
+        /**
+         * ✅ Gắt hơn + chậm hơn ở cuối + thêm delay hồi hộp
+         */
+        function spinStart(player) {
+            if (isSpinning[player]) return;
+            if (player === 1 && !picked[0]) return toast("Quay Người chơi 1 trước");
+
+            isSpinning[player] = true;
+
+            const card = $("r" + player);
+            const status = $("s" + player);
+
+            card.classList.add("sp");
+            status.textContent = "Đang quay...";
+
+            // iOS: unlock audio on user gesture
+            tickSound.play().then(() => tickSound.pause()).catch(() => { });
+
+            const totalTime = 3300;
+            const startDelay = 45;
+            const endDelay = 700; // ✅ chậm hơn ở cuối
+            const suspenseHoldMs = 600; // ✅ delay hồi hộp trước khi chốt
+
+            const startTime = performance.now();
+            let lastShown = null;
+
+            function loop(now) {
+                const elapsed = now - startTime;
+                const p = Math.min(elapsed / totalTime, 1);
+
+                // ✅ ease-out mạnh (gắt): p^3
+                const ease = p * p * p;
+
+                const delay = startDelay + (endDelay - startDelay) * ease;
+
+                lastShown = rand();
+                setCard(player, lastShown);
+                playTick();
+
+                if (p < 1) {
+                    setTimeout(() => requestAnimationFrame(loop), delay);
+                } else {
+                    // ✅ thêm "đứng hình" hồi hộp (vẫn giữ card + nhịp dừng)
+                    status.textContent = "Sắp ra kết quả...";
+                    setTimeout(() => finishSpin(player), suspenseHoldMs);
+                }
+            }
+
+            requestAnimationFrame(loop);
+        }
+
+        function finishSpin(player) {
+            const card = $("r" + player);
+            const status = $("s" + player);
+
+            // Pick kết quả thật từ pool
+            const team = rand();
+            picked[player] = team;
+            pool = pool.filter(t => t.id !== team.id);
+
+            setCard(player, team);
+            status.textContent = "Kết quả:";
+            card.classList.remove("sp");
+
             drawList();
-            if (p === 0) $("b1").disabled = false;
-            else $("b0").disabled = $("b1").disabled = true;
+
+            isSpinning[player] = false;
+
+            if (player === 0) {
+                $("b1").disabled = false;
+            } else {
+                $("b0").disabled = true;
+                $("b1").disabled = true;
+            }
         }
+
         function reset() {
             pool = [...TEAMS];
             picked = [null, null];
-            ["0", "1"].forEach(i => { $("n" + i).textContent = "—"; $("l" + i).src = ""; $("s" + i).textContent = ""; $("r" + i).classList.remove("sp"); });
-            $("b0").disabled = false; $("b1").disabled = true;
+            isSpinning = [false, false];
+
+            ["0", "1"].forEach(i => {
+                $("n" + i).textContent = "—";
+                $("l" + i).src = "";
+                $("s" + i).textContent = "";
+                $("r" + i).classList.remove("sp");
+            });
+
+            $("b0").disabled = false;
+            $("b1").disabled = true;
+
             drawList();
         }
 
@@ -325,13 +426,10 @@
         $("b1").onclick = () => spinStart(1);
         $("reset").onclick = reset;
 
-        // Register SW (PWA)
+        // SW register
         if ("serviceWorker" in navigator) {
             window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js"));
         }
-
-        // optional preload (reduce flicker)
-        TEAMS.forEach(t => { const im = new Image(); im.src = t.u; });
 
         reset();
     </script>
