@@ -275,6 +275,10 @@
         const tickSound = new Audio("sounds/tick.mp3");
         tickSound.volume = 0.7;
         tickSound.preload = "auto";
+        const dongSound = new Audio("sounds/dong.mp3");
+        dongSound.volume = 0.8;
+        dongSound.preload = "auto";
+
 
         let pool = [];
         let picked = [null, null];
@@ -337,6 +341,7 @@
 
             isSpinning[player] = true;
 
+
             const card = $("r" + player);
             const status = $("s" + player);
 
@@ -380,6 +385,10 @@
         }
 
         function finishSpin(player) {
+            try {
+                dongSound.currentTime = 0;
+                dongSound.play();
+            } catch (e) { }
             const card = $("r" + player);
             const status = $("s" + player);
 

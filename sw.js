@@ -1,4 +1,4 @@
-const CACHE = "fc26-random-local-v2";
+const CACHE = "fc26-random-local-v3";
 const CORE = [
     "./",
     "./index.html",
@@ -8,6 +8,7 @@ const CORE = [
     "./icons/icon-192.png",
     "./icons/icon-512.png",
     "./sounds/tick.mp3",
+    "./sounds/dong.mp3",
     // logos
     "./logos/real-madrid.png",
     "./logos/barcelona.png",
